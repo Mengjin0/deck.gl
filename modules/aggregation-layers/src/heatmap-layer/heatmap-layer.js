@@ -479,7 +479,7 @@ export default class HeatmapLayer extends AggregationLayer {
         blend: true,
         depthTest: false,
         blendFunc: [GL.ONE, GL.ONE],
-        blendEquation: aggregation === 'MIN' ? GL.MIN : (aggregation === 'MAX' ? GL.MAX : GL.FUNC_ADD)
+        blendEquation: aggregation === 'MIN' ? GL.MIN : aggregation === 'MAX' ? GL.MAX : GL.FUNC_ADD
       },
       clearRenderTarget: true,
       attributes: this.getAttributes(),
