@@ -65,7 +65,9 @@ const defaultProps = {
   radiusPixels: {type: 'number', min: 1, max: 100, value: 50},
   colorRange: defaultColorRange,
   threshold: {type: 'number', min: 0, max: 1, value: 0.05},
-  colorDomain: {type: 'array', value: null, optional: true}
+  colorDomain: {type: 'array', value: null, optional: true},
+  // 'SUM', 'MIN' or 'MAX'
+  aggregation: 'SUM'
 };
 
 const REQUIRED_FEATURES = [
@@ -451,7 +453,7 @@ export default class HeatmapLayer extends AggregationLayer {
   }
 
   _updateWeightmap() {
-    const {radiusPixels} = this.props;
+    const {radiusPixels, aggregation} = this.props;
     const {weightsTransform, worldBounds, textureSize, weightsTexture, weightsScale} = this.state;
     this.state.isWeightMapDirty = false;
 
@@ -477,7 +479,7 @@ export default class HeatmapLayer extends AggregationLayer {
         blend: true,
         depthTest: false,
         blendFunc: [GL.ONE, GL.ONE],
-        blendEquation: GL.FUNC_ADD
+        blendEquation: aggregation === 'MIN' ? GL.MIN : (aggregation === 'MAX' ? GL.MAX : GL.FUNC_ADD)
       },
       clearRenderTarget: true,
       attributes: this.getAttributes(),
